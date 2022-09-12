@@ -30,16 +30,18 @@ export const deleteUserById = async (req, res) => {
 
 export const updateUser = async (req, res) => {
 	try {
+		const user = await userModel.findById(req.params.id);
+		const { isAdmin, ...ramainingData } = user._doc;
 		const updateUser = await userModel.findByIdAndUpdate(
 			req.params.id,
 			{
-				$set: req.body,
+				$set: req.user.isAdmin ? req.body : ramainingData,
 			},
 			{ new: true }
 		);
 		res.status(200).json(updateUser);
 	} catch (error) {
-		throw error;
+		console.log(error);
 	}
 };
 
